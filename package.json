@@ -1,0 +1,25 @@
+{
+  "name": "07_drawing-board",
+  "version": "1.0.0",
+  "description": "[fastcampus] 30개 프로젝트로 배우는 프론트엔드 with React",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build --public-url ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/productuidev/07_drawing-board.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/productuidev/07_drawing-board/issues"
+  },
+  "homepage": "https://github.com/productuidev/07_drawing-board#readme",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.7.0",
+    "parcel": "^2.7.0"
+  }
+}
