@@ -2,39 +2,41 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 	<title>Drawing Board</title>
 	<link rel="stylesheet" href="./src/scss/style.scss" />
 </head>
 
 <body>
 	<div class="container" id="container">
-		<div class="toolbar" id="toolbar">
-			<div class="tool brush" id="brush">
+		<div class="toolbar" id="toolbar"><!-- 툴바 -->
+			<div class="tool brush" id="brush"><!-- 그리기 -->
 				<i class="fas fa-paint-brush"></i>
 			</div>
-			<div class="tool eraser" id="eraser">
+			<div class="tool eraser" id="eraser"><!-- 지우기 -->
 				<i class="fas fa-eraser"></i>
 			</div>
-			<div class="tool nav" id="navigator">
+			<div class="tool nav" id="navigator"><!-- 네비게이션 -->
 				<i class="fas fa-map"></i>
 			</div>
-			<div class="tool undo" id="undo">
+			<div class="tool undo" id="undo"><!-- 취소/이전단계로 돌아가기 -->
 				<i class="fas fa-undo"></i>
 			</div>
-			<div class="tool clear" id="clear">
+			<div class="tool clear" id="clear"><!-- 새로만들기 -->
 				<i class="fas fa-trash-alt"></i>
 			</div>
-			<div class="tool dl">
+			<div class="tool dl"><!-- 다운로드 -->
 				<a id="download"><i class="fas fa-download"></i></i></a>
 			</div>
-			<input class="tool colorSelector" id="colorPicker" type="color" value="#e53935">
+			<input class="tool colorSelector" id="colorPicker" type="color" value="#e53935"><!-- 색상선택 -->
 		</div>
 
-		<canvas class="canvas" id="canvas" width="900" height="800"></canvas>
+		<canvas class="canvas" id="canvas" width="900" height="800"></canvas><!-- 그림판 -->
 
-		<div class="brushPanel hide" id="brushPanel">
+		<div class="brushPanel hide" id="brushPanel"><!-- 브러쉬 -->
 			<label for="brushSize" class="brushSizeLabel"> Size</label>
 			<input type="range" class="brushSize" id="brushSize" value="10" min="1" max="80">
 			<div class="brushSizePreviewContainer">
@@ -42,7 +44,7 @@
 			</div>
 		</div>
 
-		<div class="imgNav hide" id="imgNav">
+		<div class="imgNav hide" id="imgNav"><!-- 이미지네비게이션 -->
 			<img id="canvasImg" class="navImg" />
 		</div>
 	</div>

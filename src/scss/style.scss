@@ -1,3 +1,8 @@
+$fa-font-path: '../../node_modules/@fortawesome/fontawesome-free/webfonts';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/solid.scss';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/brands.scss';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss';
+
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +17,7 @@
   width: 955px;
   margin: auto;
   flex-wrap: wrap;
-  top: 100px;
+  top: 20px;
   position: relative;
 
   .canvas {
