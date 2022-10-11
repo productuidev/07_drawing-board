@@ -20,6 +20,12 @@
   "homepage": "https://github.com/productuidev/07_drawing-board#readme",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.7.0",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "parcel": "^2.7.0"
+  },
+  "dependencies": {
+    "prettier": "2.7.1"
   }
 }

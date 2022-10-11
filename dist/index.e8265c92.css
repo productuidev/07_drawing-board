@@ -1,5 +1,139 @@
-h1 {
-  color: green;
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 955px;
+  flex-wrap: wrap;
+  margin: auto;
+  display: flex;
+  position: relative;
+  top: 100px;
+}
+
+.container .canvas {
+  border: 2px solid #000;
+}
+
+.container .toolbar {
+  width: 50px;
+  height: 804px;
+  background: #535353;
+}
+
+.container .toolbar .tool {
+  height: 45px;
+  width: 50px;
+  cursor: pointer;
+  color: #dcdcdc;
+  background: #535353;
+  border: 1px solid #0000;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  transition: all .2s;
+  display: flex;
+}
+
+.container .toolbar .tool:hover {
+  background-color: #383838;
+  border-color: #636363;
+  border-radius: 5px;
+  transition: all .2s;
+}
+
+.container .toolbar .tool.active {
+  background-color: #383838;
+  border-color: #636363;
+}
+
+.container .toolbar .tool .fas {
+  font-size: 25px;
+}
+
+.container .brushPanel {
+  height: 100px;
+  width: 350px;
+  background: #535353;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+  left: 50px;
+}
+
+.container .imgNav {
+  height: 180px;
+  width: 200px;
+  background: #535353;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  display: flex;
+  top: 15px;
+  right: 15px;
+}
+
+.brushPanel.hide, .imgNav.hide {
+  display: none;
+}
+
+.container .toolbar .dl a#download {
+  color: #dcdcdc;
+}
+
+.container .brushPanel label {
+  color: #dcdcdc;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.container .brushPanel .brushSizeLabel {
+  position: relative;
+  left: -40px;
+}
+
+.container .toolbar input.tool[type="color"] {
+  height: 45px;
+  width: 50px;
+  margin: auto;
+}
+
+.container .brushPanel input.brushSize[type="range"] {
+  width: 200px;
+  position: relative;
+  left: -40px;
+}
+
+.container .brushPanel .brushSizePreviewContainer {
+  background: inherit;
+  width: 100px;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  right: 0;
+}
+
+.container .brushPanel .brushSizePreviewContainer label.brushSizePreview {
+  width: 10px;
+  height: 10px;
+  background: #e53935;
+  border-radius: 50%;
+}
+
+.container .imgNav .navImg {
+  width: 180px;
+  height: 160px;
+  background-color: #fff;
 }
 
 /*# sourceMappingURL=index.e8265c92.css.map */
