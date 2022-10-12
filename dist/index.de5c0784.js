@@ -12,6 +12,10 @@ class DrawingBoard {
         this.canvasEl = this.containerEl.querySelector("#canvas");
         this.toolbarEl = this.containerEl.querySelector("#toolbar");
         this.brushEl = this.containerEl.querySelector("#brush");
+        this.colorPickerEl = this.containerEl.querySelector("#colorPicker");
+        this.brushPanelEl = this.containerEl.querySelector("#brushPanel");
+        this.brushSliderEl = this.brushPanelEl.querySelector("#brushSize");
+        this.brushSizePreviewEl = this.brushPanelEl.querySelector("#brushSizePreview");
     }
     // 2D 캔버스 구현
     initContext() {
@@ -22,20 +26,38 @@ class DrawingBoard {
         this.canvasEl.addEventListener("mousedown", this.onMouseDown.bind(this));
         this.canvasEl.addEventListener("mousemove", this.onMouseMove.bind(this));
         this.canvasEl.addEventListener("mouseup", this.onMouseUp.bind(this));
+        this.canvasEl.addEventListener("mouseout", this.onMouseOut.bind(this));
+        this.brushSliderEl.addEventListener("input", this.onChangeBrushSize.bind(this));
+        this.colorPickerEl.addEventListener("input", this.onChangeColor.bind(this));
+    }
+    onMouseOut() {
+        if (this.MODE === "NONE") return; // 브러시 모드가 NONE이면 진입 불가 (반환)
+        this.IsMouseDown = false;
+    }
+    // 브러시 패널에 선택한 컬러피커의 색상 적용
+    onChangeColor(event) {
+        this.brushSizePreviewEl.style.backgroundColor = event.target.value;
+    }
+    // 브러시 패널에서 슬라이더로 브러시 사이즈 조정
+    onChangeBrushSize(event) {
+        this.brushSizePreviewEl.style.width = `${event.target.value}px`;
+        this.brushSizePreviewEl.style.height = `${event.target.value}px`;
     }
     // 마우스를 누를 때
     onMouseDown(event) {
-        if (this.MODE === "NONE") return;
+        if (this.MODE === "NONE") return; // 브러시 모드가 NONE이면 진입 불가 (반환)
         this.IsMouseDown = true;
         const currentPosition = this.getMousePosition(event);
         // 2D 캔버스 그리기
         this.context.beginPath(); // 경로 시작
         this.context.moveTo(currentPosition.x, currentPosition.y); // 현재 좌표로 이동
         this.context.lineCap = "round"; // 펜팁
-        this.context.strokeStyle = "#000000"; // 선 색상
-        this.context.lineWidth = 10; // 두께
-    // this.context.lineTo(400, 400); // 캔버스 기준 x:400, y:400
-    // this.context.stroke(); // 그리기
+        // this.context.strokeStyle = '#000000'; // 선 색상
+        // this.context.lineWidth = 10; // 두께
+        // this.context.lineTo(400, 400); // 캔버스 기준 x:400, y:400
+        // this.context.stroke(); // 그리기
+        this.context.strokeStyle = this.colorPickerEl.value; // 컬러피커의 값
+        this.context.lineWidth = this.brushSliderEl.value; // 브러시슬라이더의 값
     }
     // 마우스를 움직일 때
     onMouseMove(event) {
@@ -65,6 +87,7 @@ class DrawingBoard {
         const IsActive = event.currentTarget.classList.contains("active"); // 반복 코드 정리
         this.MODE = IsActive ? "NONE" : "BRUSH";
         this.canvasEl.style.cursor = IsActive ? "default" : "crosshair";
+        this.brushPanelEl.classList.toggle("hide"); // 브러시 패널 활성화
         this.brushEl.classList.toggle("active");
     }
 }
