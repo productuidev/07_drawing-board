@@ -20,6 +20,8 @@ class DrawingBoard {
     addEvent() {
         this.brushEl.addEventListener("click", this.onClickBrush.bind(this));
         this.canvasEl.addEventListener("mousedown", this.onMouseDown.bind(this));
+        this.canvasEl.addEventListener("mousemove", this.onMouseMove.bind(this));
+        this.canvasEl.addEventListener("mouseup", this.onMouseUp.bind(this));
     }
     // 마우스를 누를 때
     onMouseDown(event) {
@@ -28,13 +30,26 @@ class DrawingBoard {
         const currentPosition = this.getMousePosition(event);
         // 2D 캔버스 그리기
         this.context.beginPath(); // 경로 시작
-        this.context.moveTo(currentPosition.x, currentPosition.y); // 펜 위치 이동
+        this.context.moveTo(currentPosition.x, currentPosition.y); // 현재 좌표로 이동
         this.context.lineCap = "round"; // 펜팁
         this.context.strokeStyle = "#000000"; // 선 색상
         this.context.lineWidth = 10; // 두께
-        this.context.lineTo(400, 400); // 캔버스 기준 x:400, y:400
+    // this.context.lineTo(400, 400); // 캔버스 기준 x:400, y:400
+    // this.context.stroke(); // 그리기
+    }
+    // 마우스를 움직일 때
+    onMouseMove(event) {
+        if (!this.IsMouseDown) return; // 마우스를 누른 게 아니면 진입 불가 (반환)
+        const currentPosition = this.getMousePosition(event);
+        this.context.lineTo(currentPosition.x, currentPosition.y); // 현재 좌표로 이동
         this.context.stroke(); // 그리기
     }
+    // 마우스를 뗐을 때 = 마우스를 누른 게 아닌 상태
+    onMouseUp() {
+        if (this.MODE === "NONE") return; // 브러시 모드가 NONE이면 진입 불가 (반환)
+        this.IsMouseDown = false;
+    }
+    // 마우스 좌표
     getMousePosition(event) {
         const boundaries = this.canvasEl.getBoundingClientRect(); // 좌표 값 구하기
         return {
