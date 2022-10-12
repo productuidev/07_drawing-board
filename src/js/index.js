@@ -5,6 +5,7 @@ class DrawingBoard {
 
   assignElement() {
     this.containerEl = document.getElementById('container');
+    this.canvasEl = document.getElementById('canvas');
   }
 
   addEvent() {}
