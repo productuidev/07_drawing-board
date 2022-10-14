@@ -3,10 +3,13 @@ console.log('그림판');
 class DrawingBoard {
   MODE = 'NONE'; // 브러시 모드 : NONE BRUSH ERASER
   IsMouseDown = false; // T/F
+  eraserColor = '#FFFFFF'; // 지우개 변수
+  backgroundColor = '#FFFFFF'; // 배경색 변수
 
   constructor() {
     this.assignElement();
     this.initContext();
+    this.initCanvasBackgroundColor();
     this.addEvent();
   }
 
@@ -14,17 +17,24 @@ class DrawingBoard {
     this.containerEl = document.getElementById('container');
     this.canvasEl = this.containerEl.querySelector('#canvas');
     this.toolbarEl = this.containerEl.querySelector('#toolbar');
-    this.brushEl = this.containerEl.querySelector('#brush');
-    this.colorPickerEl = this.containerEl.querySelector('#colorPicker');
+    this.brushEl = this.toolbarEl.querySelector('#brush');
+    this.colorPickerEl = this.toolbarEl.querySelector('#colorPicker');
     this.brushPanelEl = this.containerEl.querySelector('#brushPanel');
     this.brushSliderEl = this.brushPanelEl.querySelector('#brushSize');
     this.brushSizePreviewEl =
       this.brushPanelEl.querySelector('#brushSizePreview');
+    this.eraserEl = this.toolbarEl.querySelector('#eraser');
   }
 
   // 2D 캔버스 구현
   initContext() {
     this.context = this.canvasEl.getContext('2d');
+  }
+
+  // 캔버스 초기화 (초기화 시 캔버스 크기만큼의 직사각형을 그리고 시작하는 개념)
+  initCanvasBackgroundColor() {
+    this.context.fillStyle = this.backgroundColor;
+    this.context.fillRect(0, 0, this.canvasEl.width, this.canvasEl.height); // fillRect(직사각형 그리기) : 캔버스 기준 0,0 좌표가 시작되는 지점, 캔버스의 너비, 캔버스 높이
   }
 
   addEvent() {
@@ -38,6 +48,7 @@ class DrawingBoard {
       this.onChangeBrushSize.bind(this),
     );
     this.colorPickerEl.addEventListener('input', this.onChangeColor.bind(this));
+    this.eraserEl.addEventListener('click', this.onClickEraser.bind(this));
   }
 
   onMouseOut() {
@@ -72,8 +83,15 @@ class DrawingBoard {
     // this.context.lineTo(400, 400); // 캔버스 기준 x:400, y:400
     // this.context.stroke(); // 그리기
 
-    this.context.strokeStyle = this.colorPickerEl.value; // 컬러피커의 값
-    this.context.lineWidth = this.brushSliderEl.value; // 브러시슬라이더의 값
+    // 조건문으로 변경
+    if (this.MODE === 'BRUSH') {
+      this.context.strokeStyle = this.colorPickerEl.value; // 컬러피커의 값
+      this.context.lineWidth = this.brushSliderEl.value; // 브러시슬라이더의 값
+    } else if (this.MODE === 'ERASER') {
+      // 지우개를 배경색(흰색)인 브러시로 덮는 개념이라고 보면 됨
+      this.context.strokeStyle = this.eraserColor;
+      this.context.lineWidth = 50;
+    }
   }
 
   // 마우스를 움직일 때
@@ -108,10 +126,20 @@ class DrawingBoard {
     const IsActive = event.currentTarget.classList.contains('active'); // 반복 코드 정리
     this.MODE = IsActive ? 'NONE' : 'BRUSH';
     this.canvasEl.style.cursor = IsActive ? 'default' : 'crosshair';
-
     this.brushPanelEl.classList.toggle('hide'); // 브러시 패널 활성화
-
     this.brushEl.classList.toggle('active');
+    this.eraserEl.classList.remove('active');
+  }
+
+  // 지우개 기능 (브러시 기능 응용)
+  // 지우개를 눌렀을 때 상태 변경
+  onClickEraser() {
+    const IsActive = event.currentTarget.classList.contains('active');
+    this.MODE = IsActive ? 'NONE' : 'ERASER';
+    this.canvasEl.style.cursor = IsActive ? 'default' : 'crosshair';
+    this.brushPanelEl.classList.add('hide');
+    this.eraserEl.classList.toggle('active');
+    this.brushEl.classList.remove('active');
   }
 }
 
