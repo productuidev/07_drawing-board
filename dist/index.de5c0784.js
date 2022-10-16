@@ -20,6 +20,7 @@ class DrawingBoard {
         this.brushSliderEl = this.brushPanelEl.querySelector("#brushSize");
         this.brushSizePreviewEl = this.brushPanelEl.querySelector("#brushSizePreview");
         this.eraserEl = this.toolbarEl.querySelector("#eraser");
+        this.navigatorEl = this.toolbarEl.querySelector("#navigator");
     }
     // 2D 캔버스 구현
     initContext() {
@@ -39,6 +40,7 @@ class DrawingBoard {
         this.brushSliderEl.addEventListener("input", this.onChangeBrushSize.bind(this));
         this.colorPickerEl.addEventListener("input", this.onChangeColor.bind(this));
         this.eraserEl.addEventListener("click", this.onClickEraser.bind(this));
+        this.navigatorEl.addEventListener("click", this.onClickNavigator.bind(this));
     }
     onMouseOut() {
         if (this.MODE === "NONE") return; // 브러시 모드가 NONE이면 진입 불가 (반환)
@@ -105,7 +107,8 @@ class DrawingBoard {
         this.MODE = IsActive ? "NONE" : "BRUSH";
         this.canvasEl.style.cursor = IsActive ? "default" : "crosshair";
         this.brushPanelEl.classList.toggle("hide"); // 브러시 패널 활성화
-        this.brushEl.classList.toggle("active");
+        event1.currentTarget.classList.toggle("active");
+        // this.brushEl.classList.toggle('active');
         this.eraserEl.classList.remove("active");
     }
     // 지우개 기능 (브러시 기능 응용)
@@ -115,8 +118,13 @@ class DrawingBoard {
         this.MODE = IsActive ? "NONE" : "ERASER";
         this.canvasEl.style.cursor = IsActive ? "default" : "crosshair";
         this.brushPanelEl.classList.add("hide");
-        this.eraserEl.classList.toggle("active");
+        event.currentTarget.classList.toggle("active");
+        // this.eraserEl.classList.toggle('active');
         this.brushEl.classList.remove("active");
+    }
+    // 네비게이터(미니맵)
+    onClickNavigator(event1) {
+        event1.currentTarget.classList.toggle("active");
     }
 }
 // 인스턴스 생성

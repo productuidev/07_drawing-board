@@ -24,6 +24,7 @@ class DrawingBoard {
     this.brushSizePreviewEl =
       this.brushPanelEl.querySelector('#brushSizePreview');
     this.eraserEl = this.toolbarEl.querySelector('#eraser');
+    this.navigatorEl = this.toolbarEl.querySelector('#navigator');
   }
 
   // 2D 캔버스 구현
@@ -49,6 +50,10 @@ class DrawingBoard {
     );
     this.colorPickerEl.addEventListener('input', this.onChangeColor.bind(this));
     this.eraserEl.addEventListener('click', this.onClickEraser.bind(this));
+    this.navigatorEl.addEventListener(
+      'click',
+      this.onClickNavigator.bind(this),
+    );
   }
 
   onMouseOut() {
@@ -127,7 +132,8 @@ class DrawingBoard {
     this.MODE = IsActive ? 'NONE' : 'BRUSH';
     this.canvasEl.style.cursor = IsActive ? 'default' : 'crosshair';
     this.brushPanelEl.classList.toggle('hide'); // 브러시 패널 활성화
-    this.brushEl.classList.toggle('active');
+    event.currentTarget.classList.toggle('active');
+    // this.brushEl.classList.toggle('active');
     this.eraserEl.classList.remove('active');
   }
 
@@ -138,8 +144,14 @@ class DrawingBoard {
     this.MODE = IsActive ? 'NONE' : 'ERASER';
     this.canvasEl.style.cursor = IsActive ? 'default' : 'crosshair';
     this.brushPanelEl.classList.add('hide');
-    this.eraserEl.classList.toggle('active');
+    event.currentTarget.classList.toggle('active');
+    // this.eraserEl.classList.toggle('active');
     this.brushEl.classList.remove('active');
+  }
+
+  // 네비게이터(미니맵)
+  onClickNavigator(event) {
+    event.currentTarget.classList.toggle('active');
   }
 }
 
