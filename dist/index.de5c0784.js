@@ -21,6 +21,8 @@ class DrawingBoard {
         this.brushSizePreviewEl = this.brushPanelEl.querySelector("#brushSizePreview");
         this.eraserEl = this.toolbarEl.querySelector("#eraser");
         this.navigatorEl = this.toolbarEl.querySelector("#navigator");
+        this.navigatorImageContainerEl = this.containerEl.querySelector("#imgNav");
+        this.navigatorImageEl = this.containerEl.querySelector("#canvasImg");
     }
     // 2D 캔버스 구현
     initContext() {
@@ -45,6 +47,7 @@ class DrawingBoard {
     onMouseOut() {
         if (this.MODE === "NONE") return; // 브러시 모드가 NONE이면 진입 불가 (반환)
         this.IsMouseDown = false;
+        this.updateNavigator();
     }
     // 브러시 패널에 선택한 컬러피커의 색상 적용
     onChangeColor(event1) {
@@ -89,6 +92,7 @@ class DrawingBoard {
     onMouseUp() {
         if (this.MODE === "NONE") return; // 브러시 모드가 NONE이면 진입 불가 (반환)
         this.IsMouseDown = false;
+        this.updateNavigator();
     }
     // 마우스 좌표
     getMousePosition(event1) {
@@ -125,6 +129,14 @@ class DrawingBoard {
     // 네비게이터(미니맵)
     onClickNavigator(event1) {
         event1.currentTarget.classList.toggle("active");
+        this.navigatorImageContainerEl.classList.toggle("hide");
+        // console.log(this.canvasEl.toDataURL());
+        this.updateNavigator();
+    }
+    // 현재 캔버스 상태를 이미지 형태로 변환하여 canvasImg에 src 형태로 업데이트하여 네비게이터(미니맵)으로 보여줄 수 있다
+    // 단, 너무 자주 업데이트 시 버벅거리는 현상 > 마우스를 떼거나 밖으로 나갔을 때 업데이트
+    updateNavigator() {
+        this.navigatorImageEl.src = this.canvasEl.toDataURL();
     }
 }
 // 인스턴스 생성
