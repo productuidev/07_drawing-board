@@ -6,6 +6,7 @@ class DrawingBoard {
   eraserColor = '#FFFFFF'; // 지우개 변수
   backgroundColor = '#FFFFFF'; // 배경색 변수
   IsNavigatorVisible = false; // T/F
+  undoArray = [];
 
   constructor() {
     this.assignElement();
@@ -28,6 +29,7 @@ class DrawingBoard {
     this.navigatorEl = this.toolbarEl.querySelector('#navigator');
     this.navigatorImageContainerEl = this.containerEl.querySelector('#imgNav');
     this.navigatorImageEl = this.containerEl.querySelector('#canvasImg');
+    this.undoEl = this.toolbarEl.querySelector('#undo');
   }
 
   // 2D 캔버스 구현
@@ -57,6 +59,7 @@ class DrawingBoard {
       'click',
       this.onClickNavigator.bind(this),
     );
+    this.undoEl.addEventListener('click', this.onClickUndo.bind(this));
   }
 
   onMouseOut() {
@@ -101,6 +104,8 @@ class DrawingBoard {
       this.context.strokeStyle = this.eraserColor;
       this.context.lineWidth = 50;
     }
+
+    this.saveState();
   }
 
   // 마우스를 움직일 때
@@ -156,7 +161,7 @@ class DrawingBoard {
 
   // 네비게이터(미니맵)
   onClickNavigator(event) {
-    // 네비게이터를 켜두지 않은 상태에서 그리는 상태가 업데이트되지 않도록
+    // 네비게이터가 보이지 않는 경우 그리고 있는 상태가 업데이트되지 않도록
     this.IsNavigatorVisible = !event.currentTarget.classList.contains('active'); // active를 포함하지 않는 (반대)
     event.currentTarget.classList.toggle('active');
     this.navigatorImageContainerEl.classList.toggle('hide');
@@ -169,6 +174,50 @@ class DrawingBoard {
   updateNavigator() {
     if (!this.IsNavigatorVisible) return;
     this.navigatorImageEl.src = this.canvasEl.toDataURL();
+  }
+
+  // 실행취소
+  onClickUndo() {
+    if (this.undoArray.lenght === 0) {
+      alert('더 이상 실행취소는 불가합니다.');
+      return;
+    }
+
+    if (this.undoArray.length === 0) return;
+    let previousDataUrl = this.undoArray.pop(); // 배열의 마지막 요소 제거
+    let previousImage = new Image(); // 이전 이미지 객체 생성
+    previousImage.onload = () => {
+      // clearRect : 캔버스의 특정 영역 지우는 메소드
+      // clearRect(x, y, w, h)
+      this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+
+      // drawImage : 캔버스에서 이미지를 그리는 메소드
+      // drawImage(image, ix, iy, iw, ih, cx, cy, cw, ch)
+      this.context.drawImage(
+        previousImage,
+        0,
+        0,
+        this.canvasEl.width,
+        this.canvasEl.height,
+        0,
+        0,
+        this.canvasEl.width,
+        this.canvasEl.height,
+      );
+    };
+    previousImage.src = previousDataUrl;
+  }
+
+  // 상태 저장 (최근 5개까지만 상태만)
+  // 데이터를 배열(array)로 만들어서 저장
+  saveState() {
+    if (this.undoArray.length > 4) {
+      this.undoArray.shift();
+      this.undoArray.push(this.canvasEl.toDataURL());
+    } else {
+      this.undoArray.push(this.canvasEl.toDataURL());
+    }
+    // console.log(this.undoArray);
   }
 }
 

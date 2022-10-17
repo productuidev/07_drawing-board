@@ -4,6 +4,8 @@ class DrawingBoard {
     IsMouseDown = false;
     eraserColor = "#FFFFFF";
     backgroundColor = "#FFFFFF";
+    IsNavigatorVisible = false;
+    undoArray = [];
     constructor(){
         this.assignElement();
         this.initContext();
@@ -23,6 +25,7 @@ class DrawingBoard {
         this.navigatorEl = this.toolbarEl.querySelector("#navigator");
         this.navigatorImageContainerEl = this.containerEl.querySelector("#imgNav");
         this.navigatorImageEl = this.containerEl.querySelector("#canvasImg");
+        this.undoEl = this.toolbarEl.querySelector("#undo");
     }
     // 2D 캔버스 구현
     initContext() {
@@ -43,6 +46,7 @@ class DrawingBoard {
         this.colorPickerEl.addEventListener("input", this.onChangeColor.bind(this));
         this.eraserEl.addEventListener("click", this.onClickEraser.bind(this));
         this.navigatorEl.addEventListener("click", this.onClickNavigator.bind(this));
+        this.undoEl.addEventListener("click", this.onClickUndo.bind(this));
     }
     onMouseOut() {
         if (this.MODE === "NONE") return; // 브러시 모드가 NONE이면 진입 불가 (반환)
@@ -80,6 +84,7 @@ class DrawingBoard {
             this.context.strokeStyle = this.eraserColor;
             this.context.lineWidth = 50;
         }
+        this.saveState();
     }
     // 마우스를 움직일 때
     onMouseMove(event1) {
@@ -128,6 +133,8 @@ class DrawingBoard {
     }
     // 네비게이터(미니맵)
     onClickNavigator(event1) {
+        // 네비게이터가 보이지 않는 경우 그리고 있는 상태가 업데이트되지 않도록
+        this.IsNavigatorVisible = !event1.currentTarget.classList.contains("active"); // active를 포함하지 않는 (반대)
         event1.currentTarget.classList.toggle("active");
         this.navigatorImageContainerEl.classList.toggle("hide");
         // console.log(this.canvasEl.toDataURL());
@@ -136,7 +143,36 @@ class DrawingBoard {
     // 현재 캔버스 상태를 이미지 형태로 변환하여 canvasImg에 src 형태로 업데이트하여 네비게이터(미니맵)으로 보여줄 수 있다
     // 단, 너무 자주 업데이트 시 버벅거리는 현상 > 마우스를 떼거나 밖으로 나갔을 때 업데이트
     updateNavigator() {
+        if (!this.IsNavigatorVisible) return;
         this.navigatorImageEl.src = this.canvasEl.toDataURL();
+    }
+    // 실행취소
+    onClickUndo() {
+        if (this.undoArray.lenght === 0) {
+            alert("더 이상 실행취소는 불가합니다.");
+            return;
+        }
+        if (this.undoArray.length === 0) return;
+        let previousDataUrl = this.undoArray.pop(); // 배열의 마지막 요소 제거
+        let previousImage = new Image(); // 이전 이미지 객체 생성
+        previousImage.onload = ()=>{
+            // clearRect : 캔버스의 특정 영역 지우는 메소드
+            // clearRect(x, y, w, h)
+            this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+            // drawImage : 캔버스에서 이미지를 그리는 메소드
+            // drawImage(image, ix, iy, iw, ih, cx, cy, cw, ch)
+            this.context.drawImage(previousImage, 0, 0, this.canvasEl.width, this.canvasEl.height, 0, 0, this.canvasEl.width, this.canvasEl.height);
+        };
+        previousImage.src = previousDataUrl;
+    }
+    // 상태 저장 (최근 5개까지만 상태만)
+    // 데이터를 배열(array)로 만들어서 저장
+    saveState() {
+        if (this.undoArray.length > 4) {
+            this.undoArray.shift();
+            this.undoArray.push(this.canvasEl.toDataURL());
+        } else this.undoArray.push(this.canvasEl.toDataURL());
+    // console.log(this.undoArray);
     }
 }
 // 인스턴스 생성
