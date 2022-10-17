@@ -7,6 +7,20 @@ class DrawingBoard {
   backgroundColor = '#FFFFFF'; // 배경색 변수
   IsNavigatorVisible = false; // T/F
   undoArray = [];
+  containerEl;
+  canvasEl;
+  toolbarEl;
+  brushEl;
+  colorPickerEl;
+  brushPanelEl;
+  brushSliderEl;
+  brushSizePreviewEl;
+  eraserEl;
+  navigatorEl;
+  navigatorImageContainerEl;
+  navigatorImageEl;
+  undoEl;
+  clearEl;
 
   constructor() {
     this.assignElement();
@@ -30,6 +44,7 @@ class DrawingBoard {
     this.navigatorImageContainerEl = this.containerEl.querySelector('#imgNav');
     this.navigatorImageEl = this.containerEl.querySelector('#canvasImg');
     this.undoEl = this.toolbarEl.querySelector('#undo');
+    this.clearEl = this.toolbarEl.querySelector('#clear');
   }
 
   // 2D 캔버스 구현
@@ -60,6 +75,7 @@ class DrawingBoard {
       this.onClickNavigator.bind(this),
     );
     this.undoEl.addEventListener('click', this.onClickUndo.bind(this));
+    this.clearEl.addEventListener('click', this.onClickClear.bind(this));
   }
 
   onMouseOut() {
@@ -178,7 +194,7 @@ class DrawingBoard {
 
   // 실행취소
   onClickUndo() {
-    if (this.undoArray.lenght === 0) {
+    if (this.undoArray.length === 0) {
       alert('더 이상 실행취소는 불가합니다.');
       return;
     }
@@ -218,6 +234,15 @@ class DrawingBoard {
       this.undoArray.push(this.canvasEl.toDataURL());
     }
     // console.log(this.undoArray);
+  }
+
+  // 캔버스 초기화
+  onClickClear() {
+    // 캔버스 지우기
+    this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+    this.undoArray = [];
+    this.updateNavigator();
+    this.initCanvasBackgroundColor();
   }
 }
 

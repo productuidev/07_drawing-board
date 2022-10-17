@@ -6,6 +6,20 @@ class DrawingBoard {
     backgroundColor = "#FFFFFF";
     IsNavigatorVisible = false;
     undoArray = [];
+    containerEl;
+    canvasEl;
+    toolbarEl;
+    brushEl;
+    colorPickerEl;
+    brushPanelEl;
+    brushSliderEl;
+    brushSizePreviewEl;
+    eraserEl;
+    navigatorEl;
+    navigatorImageContainerEl;
+    navigatorImageEl;
+    undoEl;
+    clearEl;
     constructor(){
         this.assignElement();
         this.initContext();
@@ -26,6 +40,7 @@ class DrawingBoard {
         this.navigatorImageContainerEl = this.containerEl.querySelector("#imgNav");
         this.navigatorImageEl = this.containerEl.querySelector("#canvasImg");
         this.undoEl = this.toolbarEl.querySelector("#undo");
+        this.clearEl = this.toolbarEl.querySelector("#clear");
     }
     // 2D 캔버스 구현
     initContext() {
@@ -47,6 +62,7 @@ class DrawingBoard {
         this.eraserEl.addEventListener("click", this.onClickEraser.bind(this));
         this.navigatorEl.addEventListener("click", this.onClickNavigator.bind(this));
         this.undoEl.addEventListener("click", this.onClickUndo.bind(this));
+        this.clearEl.addEventListener("click", this.onClickClear.bind(this));
     }
     onMouseOut() {
         if (this.MODE === "NONE") return; // 브러시 모드가 NONE이면 진입 불가 (반환)
@@ -148,7 +164,7 @@ class DrawingBoard {
     }
     // 실행취소
     onClickUndo() {
-        if (this.undoArray.lenght === 0) {
+        if (this.undoArray.length === 0) {
             alert("더 이상 실행취소는 불가합니다.");
             return;
         }
@@ -173,6 +189,14 @@ class DrawingBoard {
             this.undoArray.push(this.canvasEl.toDataURL());
         } else this.undoArray.push(this.canvasEl.toDataURL());
     // console.log(this.undoArray);
+    }
+    // 캔버스 초기화
+    onClickClear() {
+        // 캔버스 지우기
+        this.context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+        this.undoArray = [];
+        this.updateNavigator();
+        this.initCanvasBackgroundColor();
     }
 }
 // 인스턴스 생성
