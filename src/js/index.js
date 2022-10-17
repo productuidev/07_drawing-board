@@ -5,6 +5,7 @@ class DrawingBoard {
   IsMouseDown = false; // T/F
   eraserColor = '#FFFFFF'; // 지우개 변수
   backgroundColor = '#FFFFFF'; // 배경색 변수
+  IsNavigatorVisible = false; // T/F
 
   constructor() {
     this.assignElement();
@@ -155,6 +156,8 @@ class DrawingBoard {
 
   // 네비게이터(미니맵)
   onClickNavigator(event) {
+    // 네비게이터를 켜두지 않은 상태에서 그리는 상태가 업데이트되지 않도록
+    this.IsNavigatorVisible = !event.currentTarget.classList.contains('active'); // active를 포함하지 않는 (반대)
     event.currentTarget.classList.toggle('active');
     this.navigatorImageContainerEl.classList.toggle('hide');
     // console.log(this.canvasEl.toDataURL());
@@ -164,6 +167,7 @@ class DrawingBoard {
   // 현재 캔버스 상태를 이미지 형태로 변환하여 canvasImg에 src 형태로 업데이트하여 네비게이터(미니맵)으로 보여줄 수 있다
   // 단, 너무 자주 업데이트 시 버벅거리는 현상 > 마우스를 떼거나 밖으로 나갔을 때 업데이트
   updateNavigator() {
+    if (!this.IsNavigatorVisible) return;
     this.navigatorImageEl.src = this.canvasEl.toDataURL();
   }
 }
