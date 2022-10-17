@@ -45,6 +45,7 @@ class DrawingBoard {
     this.navigatorImageEl = this.containerEl.querySelector('#canvasImg');
     this.undoEl = this.toolbarEl.querySelector('#undo');
     this.clearEl = this.toolbarEl.querySelector('#clear');
+    this.donwloadLinkEl = this.toolbarEl.querySelector('#download');
   }
 
   // 2D 캔버스 구현
@@ -76,6 +77,10 @@ class DrawingBoard {
     );
     this.undoEl.addEventListener('click', this.onClickUndo.bind(this));
     this.clearEl.addEventListener('click', this.onClickClear.bind(this));
+    this.donwloadLinkEl.addEventListener(
+      'click',
+      this.onClickDonwload.bind(this),
+    );
   }
 
   onMouseOut() {
@@ -243,6 +248,12 @@ class DrawingBoard {
     this.undoArray = [];
     this.updateNavigator();
     this.initCanvasBackgroundColor();
+  }
+
+  // 캔버스에 그린 그림 다운로드 기능
+  onClickDonwload() {
+    this.donwloadLinkEl.href = this.canvasEl.toDataURL('image/jpeg', 1);
+    this.donwloadLinkEl.download = 'example.jpeg';
   }
 }
 
